@@ -8,6 +8,14 @@ let contact3={name: 'Captan Blad', phone: '0542211909', email: 'Captan@gmail.com
 let contactsArr = [];
 //
 
+let count = localStorage.getItem('count') ? parseInt(localStorage.getItem('count')) : 0;
+
+for (let j = 0; j < count; ++j) {
+  contactsArr.push(JSON.parse(localStorage.getItem(`key_${j}`)))
+}
+  console.log(contactsArr);
+//
+
 // query selectors
 let dirAddCont = document.querySelector('.contact-view, .add-contact');
 let btnAddNewCnt = document.querySelector('.btnAddNewCnt');
@@ -88,6 +96,11 @@ function inputForm(){
                             address: inputAddress.value,
                             description: inputDescription.value
                         });
+                        
+                        ////////
+                        localStorage.setItem(`key_${count++}`, JSON.stringify(contactsArr[contactsArr.length - 1]));
+                        localStorage.setItem('count',count);
+                        /////////
 
                         clearForm(inputName,inputPhone,inputEmail,inputAddress,inputDescription);
 
@@ -152,7 +165,7 @@ else {return false};
 function contList(array){
   ulLIst.innerHTML = '';
   for (let i = 0; i < array.length; ++i) {
-  
+
       let item = document.createElement('li');
       item.className = 'list-item item-active';
       
@@ -206,6 +219,10 @@ function contList(array){
         btnRem.onclick = function(e){
           dirAddCont.innerHTML = '';
           contactsArr.splice(i, 1);
+
+          localStorage.removeItem(`key_${i}`);
+           count--;
+           localStorage.setItem('count',count);
 
           contList(contactsArr);
         }
